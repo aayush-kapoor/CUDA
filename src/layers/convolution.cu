@@ -114,10 +114,13 @@ ConvolutionLayer::ConvolutionLayer(size_t in_c, size_t out_c,
     std::vector<size_t> bias_shape = {out_channels};
     bias = new Tensor<float>(bias_shape);
     
-    // initialize with small random values
-    // TODO: implement proper weight initialization
-    weights->fill(0.01f);
-    bias->fill(0.0f);
+    // Initialize weights using He initialization
+    HeInitializer weight_init(true);  // true for uniform distribution
+    weight_init.initialize(weights);
+    
+    // Initialize biases with zeros
+    ConstantInitializer bias_init(0.0f);
+    bias_init.initialize(bias);
 }
 
 ConvolutionLayer::~ConvolutionLayer() {
